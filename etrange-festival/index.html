@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+body{
+margin:0;
+background:black;
+overflow:hidden;
+}
+
+#image{
+  max-width:100%;
+  max-height:100vh;
+  display:block;
+  margin:auto;
+}
+
+#flash, #fondu{
+  pointer-events:none;
+}
+
+#zone{
+  position:absolute;
+
+  top:40%;
+  left:45%;
+
+  width:150px;
+  height:80px;
+
+  cursor:pointer;
+  z-index:10;
+}
+
+#zone{
+  background:transparent;
+}
+
+#flash{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:url('parasite.jpg') center/cover no-repeat;
+opacity:0;
+z-index:20;
+}
+
+#fondu{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+opacity:0;
+z-index:30;
+}
+
+.glitch {
+  animation: glitch 0.2s steps(2, end) 3;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0px, 0px);
+    filter: contrast(1);
+  }
+  25% {
+    transform: translate(-5px, 2px);
+    filter: contrast(2);
+  }
+  50% {
+    transform: translate(5px, -2px);
+    filter: hue-rotate(20deg);
+  }
+  75% {
+    transform: translate(-3px, -1px);
+    filter: contrast(1.5);
+  }
+  100% {
+    transform: translate(0px, 0px);
+    filter: none;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<img src="image_claire.jpg" id="image">
+
+<div id="zone"></div>
+
+<div id="flash"></div>
+<div id="fondu"></div>
+
+<audio id="bug" src="bug.mp3"></audio>
+<audio id="ambiance" src="ambiance.mp3"></audio>
+<audio id="voix" src="voix.mp3"></audio>
+
+<script>
+
+window.onload = function() {
+  document.getElementById("zone").addEventListener("click", start);
+}
+
+function start(){
+
+  // plein écran
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  }
+
+  // 🔊 son bug + flash
+  let flash = document.getElementById("flash");
+  document.getElementById("bug").play().catch(()=>{});
+
+  flash.style.opacity = 1;
+
+let image = document.getElementById("image");
+image.classList.add("glitch");
+
+setTimeout(() => {
+  flash.style.opacity = 0;
+  image.classList.remove("glitch");
+}, 200);
+
+  // 🎬 suite de la scène
+  setTimeout(() => {
+
+    let fondu = document.getElementById("fondu");
+    fondu.style.opacity = 1;
+
+    document.getElementById("ambiance").play().catch(()=>{});
+
+    setTimeout(() => {
+
+      document.getElementById("image").src = "image_sombre.jpg";
+
+      document.getElementById("voix").play().catch(()=>{});
+
+      fondu.style.opacity = 0;
+
+    }, 1800);
+
+  }, 400);
+
+}
+
+let voix = document.getElementById("voix");
+voix.loop = true;
+
+</script>
+
+</body>
+</html>
