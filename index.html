@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creepy Pasta</title>
+
+<style>
+/* Reset et base */
+body {
+  margin: 0;
+  background: black;
+  overflow: hidden;
+}
+
+/* Image principale visible en entier */
+#image {
+  max-width: 100%;   /* jamais plus large que l’écran */
+  max-height: 100vh; /* jamais plus haute que la fenêtre */
+  width: auto;       /* conserve le ratio */
+  height: auto;      /* conserve le ratio */
+  display: block;
+  margin: 0 auto;    /* centre l’image horizontalement */
+}
+
+/* Zone cliquable responsive */
+#zone {
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  width: 20vw;
+  height: 10vh;
+  cursor: pointer;
+  z-index: 10;
+  background: transparent;
+}
+
+/* Flash couvre tout l'écran */
+#flash {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 20;
+  background: url('parasite.jpg') center/cover no-repeat;
+}
+
+/* Effet glitch */
+.glitch {
+  animation: glitch 0.2s steps(2, end) 3;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0, 0); filter: contrast(1); }
+  25% { transform: translate(-5px, 2px); filter: contrast(2); }
+  50% { transform: translate(5px, -2px); filter: hue-rotate(20deg); }
+  75% { transform: translate(-3px, -1px); filter: contrast(1.5); }
+  100% { transform: translate(0, 0); filter: none; }
+}
+
+/* Media query pour très petits écrans */
+@media (max-width: 400px) {
+  #zone {
+    width: 40vw;
+    height: 20vh;
+    top: 35%;
+    left: 30%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<img src="image_claire.jpg" id="image">
+
+<div id="zone"></div>
+<div id="flash"></div>
+
+<audio id="bug" src="bug.mp3"></audio>
+<audio id="voix" src="voix.mp3"></audio>
+
+<script>
+window.onload = function() {
+  document.getElementById("zone").addEventListener("click", start);
+}
+
+function start() {
+  // plein écran
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  }
+
+  // 🔊 son bug + flash
+  let flash = document.getElementById("flash");
+  document.getElementById("bug").play().catch(()=>{});
+  flash.style.opacity = 1;
+
+  let image = document.getElementById("image");
+  image.classList.add("glitch");
+
+  // Après 200ms, on retire le flash et le glitch, et on passe à l'image sombre
+  setTimeout(() => {
+    flash.style.opacity = 0;
+    image.classList.remove("glitch");
+    image.src = "image_sombre.jpg"; // image sombre directement
+
+    // Lancer la voix avec un petit délai pour éviter le chevauchement
+    setTimeout(() => {
+      let voix = document.getElementById("voix");
+      voix.play().catch(()=>{});
+      voix.loop = true;
+    }, 250); // 250ms de délai
+  }, 200);
+}
+</script>
+
+</body>
+</html>
