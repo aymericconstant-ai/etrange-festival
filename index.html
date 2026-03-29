@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creepy Pasta</title>
+
+<style>
+/* Reset et base */
+body {
+  margin: 0;
+  background: black;
+  overflow: hidden;
+}
+
+/* Image principale responsive */
+#image {
+  width: 100%;
+  height: auto;
+  max-height: 100vh;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover;
+}
+
+/* Zone cliquable responsive */
+#zone {
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  width: 20vw;
+  height: 10vh;
+  cursor: pointer;
+  z-index: 10;
+  background: transparent;
+}
+
+/* Flash et fondu couvrent tout l'écran */
+#flash, #fondu {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 20;
+  background-size: cover;
+}
+
+#flash {
+  background: url('parasite.jpg') center/cover no-repeat;
+  z-index: 20;
+}
+
+#fondu {
+  background: black;
+  z-index: 30;
+}
+
+/* Glitch effect */
+.glitch {
+  animation: glitch 0.2s steps(2, end) 3;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0, 0); filter: contrast(1); }
+  25% { transform: translate(-5px, 2px); filter: contrast(2); }
+  50% { transform: translate(5px, -2px); filter: hue-rotate(20deg); }
+  75% { transform: translate(-3px, -1px); filter: contrast(1.5); }
+  100% { transform: translate(0, 0); filter: none; }
+}
+
+/* Media query pour petits écrans */
+@media (max-width: 600px) {
+  #zone {
+    width: 30vw;
+    height: 15vh;
+    top: 35%;
+    left: 35%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<img src="image_claire.jpg" id="image">
+
+<div id="zone"></div>
+
+<div id="flash"></div>
+<div id="fondu"></div>
+
+<audio id="bug" src="bug.mp3"></audio>
+<audio id="ambiance" src="ambiance.mp3"></audio>
+<audio id="voix" src="voix.mp3"></audio>
+
+<script>
+window.onload = function() {
+  document.getElementById("zone").addEventListener("click", start);
+}
+
+function start(){
+  // plein écran
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  }
+
+  // 🔊 son bug + flash
+  let flash = document.getElementById("flash");
+  document.getElementById("bug").play().catch(()=>{});
+  flash.style.opacity = 1;
+
+  let image = document.getElementById("image");
+  image.classList.add("glitch");
+
+  setTimeout(() => {
+    flash.style.opacity = 0;
+    image.classList.remove("glitch");
+  }, 200);
+
+  // 🎬 suite de la scène
+  setTimeout(() => {
+    let fondu = document.getElementById("fondu");
+    fondu.style.opacity = 1;
+
+    document.getElementById("ambiance").play().catch(()=>{});
+
+    setTimeout(() => {
+      document.getElementById("image").src = "image_sombre.jpg";
+      document.getElementById("voix").play().catch(()=>{});
+      fondu.style.opacity = 0;
+    }, 1800);
+
+  }, 400);
+}
+
+// boucle voix
+let voix = document.getElementById("voix");
+voix.loop = true;
+
+</script>
+
+</body>
+</html>
